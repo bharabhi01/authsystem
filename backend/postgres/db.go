@@ -3,9 +3,11 @@ package postgres
 import (
 	"context"
 	"errors"
+	"log"
 )
 
 func CheckUsername(username string) (bool, error) {
+	log.Println("Checking username in database:", username)
 	if pool == nil {
 		return false, errors.New("database not initialized")
 	}
