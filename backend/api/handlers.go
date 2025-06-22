@@ -2,6 +2,7 @@ package api
 
 import (
 	"log"
+	"usernamecheck/bloomfilter"
 	"usernamecheck/postgres"
 	"usernamecheck/redis"
 
@@ -15,6 +16,11 @@ func CheckUsernameHandler(c *gin.Context) {
 		c.JSON(400, gin.H{
 			"error": "Username is required",
 		})
+		return
+	}
+
+	if !bloomfilter.IsUsernameInBloom(username) {
+		c.JSON(200, gin.H{"available": true, "message": "Username is available"})
 		return
 	}
 

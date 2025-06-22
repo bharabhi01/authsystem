@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"usernamecheck/api"
+	"usernamecheck/bloomfilter"
 	"usernamecheck/postgres"
 	"usernamecheck/redis"
 
@@ -11,10 +12,20 @@ import (
 )
 
 func main() {
-	// Load .env file
 	if err := godotenv.Load(); err != nil {
 		log.Println("No .env file found")
 	}
+
+	// Initialize Bloom Filter
+	bloomfilter.InitBloomFilter(1000000, 0.01)
+
+	bloomfilter.AddUsernameToBloom("testuser")
+	bloomfilter.AddUsernameToBloom("john_doe")
+	bloomfilter.AddUsernameToBloom("popular_user")
+	bloomfilter.AddUsernameToBloom("jane_smith")
+	bloomfilter.AddUsernameToBloom("admin")
+	bloomfilter.AddUsernameToBloom("testuser1")
+	log.Println("Bloom filter populated with initial usernames")
 
 	// Initialize Redis
 	if err := redis.InitRedis(); err != nil {
